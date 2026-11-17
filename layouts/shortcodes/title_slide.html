@@ -1,0 +1,31 @@
+<span class="title-slide">
+  <!-- Main Title & Subtitle Block -->
+  <div class="content-block">
+    <div class="title-category">{{ .Page.Params.category }}</div>
+    <h1 class="main-title">{{ .Page.Params.title }}</h1>
+    <div class="subtitle-wrapper">
+      <div class="accent-line"></div>
+      <p class="subtitle">{{ .Page.Params.subtitle }}</p>
+    </div>
+    {{- if .Page.Params.inset_image -}}
+    <div class="inset">
+      <div class="screenshot-wrapper">
+        <img src="{{ .Page.Params.inset_image | safeURL }}">
+      </div>
+    </div>
+    {{- end -}}
+  </div>
+  <!-- Footer Presenter Card & Link -->
+  <div class="slide-footer">
+    <div class="presenter-info">
+      <div class="presenter-name" >{{.Page.Params.author}}</div>
+      <div class="presenter-role">{{.Page.Params.author_role}}
+        <span class="presenter-company">{{.Page.Params.author_company}}</span></div>
+    </div>
+    <div class="presentation-link">
+      <a href="{{ .Page.RelPermalink }}/pres.html">
+        <i class="fa-solid fa-person-chalkboard"></i>
+      </a>
+    </div>
+  </div>
+</span>

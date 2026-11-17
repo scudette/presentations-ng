@@ -1,0 +1,40 @@
+{{ $title := "Velociraptor Console" }}
+{{- if .Get "title" -}}
+  {{ $title = .Get "title" }}
+{{- end -}}
+{{- $raw_src := .Get "src" -}}
+
+<!-- Try to get the image from a different page. Hugo is very
+  confusing in where it places resources, sometimes in the current page,
+  sometimes in the parent page, sometimes in other pages...
+-->
+{{- $src := .Page.Resources.GetMatch $raw_src -}}
+
+<!-- Maybe the resource actually belongs to the parent -->
+{{- if not $src -}}
+{{ $src = .Page.Parent.Resources.GetMatch $raw_src -}}
+{{- end -}}
+{{- if not $src -}}
+  {{- $p := path.Split $raw_src -}}
+  {{- with site.GetPage $p.Dir -}}
+    {{- $src = .Page.Resources.GetMatch $p.File -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $src -}}
+<div class="screenshot-wrapper">
+  <div class="window-header">
+    <div class="window-dots">
+      <span class="dot-btn dot-close"></span>
+      <span class="dot-btn dot-min"></span>
+      <span class="dot-btn dot-max"></span>
+    </div>
+    <span class="window-title">{{- $title -}}</span>
+  </div>
+  <div class="window-body">
+    <img src="{{ $src.RelPermalink }}" alt="{{ $title }}"  style="{{ .Get "style" | safeCSS }}">
+  </div>
+</div>
+{{- else -}}
+Src {{ .Get "src" }} not found!
+{{- end -}}

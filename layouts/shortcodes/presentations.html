@@ -1,0 +1,15 @@
+{{- range .Page.Pages.ByWeight -}}
+   {{- if not .Params.hidden -}}
+   {{- $published := "" -}}
+   {{- if .Params.published -}}
+     {{- $published = printf "%s %d" .Params.published.Month .Params.published.Year -}}
+   {{- end -}}
+   {{- partial "shortcodes/card" (dict
+       "page"        .
+       "link"        (printf "%s/pres.html"  .RelPermalink)
+       "title"       .Params.title
+       "subtitle"    .Params.subtitle
+       "tag"         $published
+) -}}
+  {{- end -}}
+{{- end -}}

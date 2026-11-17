@@ -1,0 +1,83 @@
+{{- $alt := .PlainText | safeHTML -}}
+{{- $title := .Title | safeHTML -}}
+{{- $raw_dest := .Destination -}}
+{{- $dest := .Page.Resources.GetMatch $raw_dest -}}
+<!-- Try to find the destination because hugo sometimes places the
+     image in different places. For example consider
+
+     Page /parent/foo/index.md
+     Image /parent/foo/image.png
+
+     This reference is actually found in the parent's page resources
+     so a raw link will be <img src="foo/image.png">
+
+     But if the main page is called _index.md then the raw link will
+     be <img src="image.png">
+
+     This is very confusing and also breaks including pages because
+     the internal links change depending on what the file is called.
+
+     So the following code tries to cover all based by looking for the
+     resource in the current page bundle or maybe the parent's page
+     bundle.
+
+     In the end the user just needs to refer to the image and not care
+     about where it is exactly.
+
+     ![](image.png)
+
+  -->
+{{- if not $dest -}}
+  {{- with .Page.Parent -}}
+    {{- $dest = .Resources.GetMatch $raw_dest -}}
+  {{- end -}}
+{{- end -}}
+
+<!-- This allows to link to an image in a different page -->
+{{- if not $dest -}}
+  {{- $p := path.Split $raw_dest -}}
+  {{- with site.GetPage $p.Dir -}}
+    {{- $dest = .Page.Resources.GetMatch $p.File -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if not $dest -}}
+Can not find resource {{ $raw_dest }} {{ .Page.Resources }}
+{{- else -}}
+<div class="screenshot-wrapper">
+  <img src="{{ $dest.RelPermalink }}" alt="{{ $alt }}" style="{{ .Attributes.style | safeCSS }}">
+</div>
+
+<!-- caption without citation -->
+{{- if and ( not .Attributes.cite) .Attributes.caption -}}
+  <footer class="quote-attribution">
+    <span class="source-group source-badge caption">
+      {{- .Attributes.caption | safeHTML -}}
+    </span>
+  </footer>
+{{- else if .Attributes.cite -}}
+  <footer class="quote-attribution">
+    <div class="source-group">
+      <a href="{{ .Attributes.cite | safeURL }}" target="_blank" class="source-url">
+        {{- if .Attributes.caption -}}
+        <span class="source-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          {{- .Attributes.caption -}}
+        </span>
+        {{- end -}}
+        <span>
+          {{- .Attributes.cite -}}
+        </span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </a>
+    </div>
+  </footer>
+{{- end -}}
+
+{{- end -}}

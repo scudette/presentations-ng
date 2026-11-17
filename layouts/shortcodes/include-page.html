@@ -1,0 +1,17 @@
+{{- with .Get 0 -}}
+{{- $target := site.GetPage . -}}
+  {{- if $target -}}
+    <!-- Store the included page object on the parent page --->
+    {{- $.Page.Store.Set "includedPage" $target -}}
+
+    <!-- Render raw content + shortcodes so headings enter the parent TOC --->
+    {{- $target.Content -}}
+
+    <!-- Clean up so normal shortcodes below this use the parent page again --->
+    {{- $.Page.Store.Delete "includedPage" -}}
+  {{- else -}}
+    {{ errorf "The %q shortcode was unable to find page %q." $.Name . }}
+  {{- end -}}
+{{- else -}}
+  {{ errorf "The %q shortcode requires a path to include." .Name }}
+{{- end -}}
