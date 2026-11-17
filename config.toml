@@ -1,4 +1,4 @@
-baseURL = "https://example.com/"
+baseURL = "https://scudette.github.io/presentations-ng/"
 languageCode = "en-us"
 title = "Velociraptor presentations"
 disableKinds = ["sitemap", "RSS"]
