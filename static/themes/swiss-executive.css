@@ -722,6 +722,10 @@
     position: absolute;
 }
 
+.reveal .inset .screenshot-wrapper img {
+    max-height: 25vh;
+}
+
 .reveal strong {
     font-weight: bold;
     color: var(--accent-orange);

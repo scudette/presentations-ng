@@ -1,3 +1,11 @@
 .main-title {
     display: none;
 }
+
+#content .inset img {
+    max-width: 20vw;
+}
+
+#content img {
+    max-width: 50vw;
+}

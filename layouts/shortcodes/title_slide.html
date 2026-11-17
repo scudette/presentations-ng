@@ -10,7 +10,7 @@
     {{- if .Page.Params.inset_image -}}
     <div class="inset">
       <div class="screenshot-wrapper">
-        <img src="{{ .Page.Params.inset_image | safeURL }}">
+        <img src="{{ (printf "%s/%s" site.BaseURL .Page.Params.inset_image) | safeURL }}">
       </div>
     </div>
     {{- end -}}
